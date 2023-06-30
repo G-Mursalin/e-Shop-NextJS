@@ -30,7 +30,7 @@ const RootLayout = ({ children }) => {
           <div className="flex min-h-screen flex-col justify-between">
             <div>
               <Navbar />
-              <main className="mt-5">{children}</main>
+              <main>{children}</main>
             </div>
             <Footer />
           </div>
