@@ -7,12 +7,22 @@ import NavLink from "./NavLink";
 import { afterLoginNavData, beforeLoginNavData } from "@/data/navData";
 import useTheme from "@/hooks/useTheme";
 import { useState } from "react";
+import useAuth from "@/hooks/useAuth";
+import { toast } from "react-hot-toast";
 
 const Navbar = () => {
+  const { user, logout } = useAuth();
+  const { uid, displayName, photoURL } = user || {};
   const [navToggle, setNavToggle] = useState(false);
-  const user = null;
+
   const navData = user ? afterLoginNavData : beforeLoginNavData;
   const { theme, toggleTheme } = useTheme();
+
+  // Handle User Logout
+  const handleLogout = async () => {
+    await logout();
+    toast.success("Logout Successfully");
+  };
 
   return (
     <nav className="navbar sticky top-0 z-10 bg-slate-200 shadow-lg dark:bg-slate-900 lg:pr-3">
@@ -82,13 +92,13 @@ const Navbar = () => {
             </div>
           </div>
         </div>
-        {
+        {uid && (
           <div className="dropdown-end dropdown">
             <label tabIndex={0} className="btn-ghost btn-circle avatar btn">
               <div className="w-10 rounded-full">
                 <Image
                   alt="user-logo"
-                  title="Nmae"
+                  title={displayName}
                   src={
                     "https://i.ibb.co/0QZCv5C/png-clipart-user-profile-computer-icons-login-user-avatars-monochrome-black.png"
                   }
@@ -102,7 +112,9 @@ const Navbar = () => {
               tabIndex={0}
               className="menu-compact dropdown-content menu rounded-box mt-3 w-52 bg-base-100 p-2 shadow"
             >
-              <li className="mb-2 mt-1 text-center font-semibold">Mursalin</li>
+              <li className="mb-2 mt-1 text-center font-semibold">
+                {displayName}
+              </li>
               <div className="divider my-0"></div>
               <li className="mb-2">
                 <NavLink
@@ -114,13 +126,16 @@ const Navbar = () => {
                 </NavLink>
               </li>
               <li className="">
-                <button className="btn-warning btn content-center text-white">
+                <button
+                  onClick={handleLogout}
+                  className="btn-warning btn content-center text-white"
+                >
                   Logout
                 </button>
               </li>
             </ul>
           </div>
-        }
+        )}
         <label className="swap swap-rotate lg:ml-2">
           <input
             onChange={toggleTheme}
