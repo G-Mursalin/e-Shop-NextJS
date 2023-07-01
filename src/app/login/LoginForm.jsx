@@ -1,11 +1,36 @@
 "use client";
 
 import GoogleLogin from "@/components/GoogleLogin";
+import useAuth from "@/hooks/useAuth";
 import Link from "next/link";
+import { useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
 
-const LoginForm = () => {
+const LogInForm = () => {
+  const { signIn } = useAuth();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
+
+  //  Handle Login
+  const onSubmit = async (data) => {
+    const { email, password } = data;
+    const toastIdLogin = toast.loading("Loading...");
+
+    try {
+      const user = await signIn(email, password);
+      toast.dismiss(toastIdLogin);
+      toast.success("User Login Successfully");
+    } catch (error) {
+      toast.dismiss(toastIdLogin);
+      toast.error(error.message || "User Fail to Login");
+    }
+  };
+
   return (
-    <form className="card-body">
+    <form onSubmit={handleSubmit(onSubmit)} className="card-body">
       <div className="form-control">
         <label htmlFor="email" className="label label-text">
           Email
@@ -17,7 +42,16 @@ const LoginForm = () => {
           name="email"
           className="input input-bordered"
           autoComplete="email"
+          {...register("email", {
+            required: true,
+            pattern: /^[\w-.]+@([\w-]+\.)+[\w-]{2,}$/,
+          })}
         />
+        {errors.email && (
+          <span className="text-red-500 text-base mt-1">
+            Please Enter a Valid Email Address
+          </span>
+        )}
       </div>
       <div className="form-control">
         <label htmlFor="password" className="label label-text">
@@ -30,7 +64,13 @@ const LoginForm = () => {
           name="password"
           className="input input-bordered"
           autoComplete="new-password"
+          {...register("password", { required: true, minLength: 6 })}
         />
+        {errors.password && (
+          <span className="text-red-500 text-base mt-1">
+            Please Enter minimum 6 Length Password
+          </span>
+        )}
         <label className="label">
           <a href="#" className="label-text-alt link link-hover">
             Forgot password?
@@ -54,4 +94,4 @@ const LoginForm = () => {
   );
 };
 
-export default LoginForm;
+export default LogInForm;

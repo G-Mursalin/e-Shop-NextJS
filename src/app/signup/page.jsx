@@ -1,5 +1,5 @@
 import LoginSvg from "@/components/LoginSvg";
-import SignupForm from "./SignupForm";
+import SignUpForm from "./SignupForm";
 
 export const metadata = {
   title: "Signup - e Shop",
@@ -15,7 +15,7 @@ const SignupPage = () => {
           <LoginSvg />
         </div>
         <div className="card flex-shrink-0 w-full max-w-lg shadow-2xl bg-base-100">
-          <SignupForm />
+          <SignUpForm />
         </div>
       </div>
     </div>

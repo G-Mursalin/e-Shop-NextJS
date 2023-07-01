@@ -100,7 +100,8 @@ const Navbar = () => {
                   alt="user-logo"
                   title={displayName}
                   src={
-                    "https://i.ibb.co/0QZCv5C/png-clipart-user-profile-computer-icons-login-user-avatars-monochrome-black.png"
+                    photoURL ||
+                    "https://i.ibb.co/R23Sc33/profile-Image-Holder.jpg"
                   }
                   width={40}
                   height={40}
