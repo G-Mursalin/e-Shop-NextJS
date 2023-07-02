@@ -11,7 +11,6 @@ export const POST = async (request) => {
   const jwt = await new SignJWT(body)
     .setProtectedHeader({ alg })
     .setIssuedAt()
-    .setExpirationTime("90d")
     .sign(secret);
 
   cookies().set({

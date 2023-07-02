@@ -4,6 +4,7 @@ import GoogleLogin from "@/components/GoogleLogin";
 import useAuth from "@/hooks/useAuth";
 import generateJWT from "@/utils/generateJWT";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 
@@ -15,6 +16,9 @@ const LogInForm = () => {
     formState: { errors },
   } = useForm();
 
+  const search = useSearchParams();
+  const from = search.get("redirectUrl") || "/";
+  const { replace } = useRouter();
   //  Handle Login
   const onSubmit = async (data) => {
     const { email, password } = data;
@@ -23,9 +27,10 @@ const LogInForm = () => {
     try {
       const user = await signIn(email, password);
       // Create JWT
-      generateJWT({ email });
+      await generateJWT({ email });
       toast.dismiss(toastIdLogin);
       toast.success("User Login Successfully");
+      replace(from);
     } catch (error) {
       toast.dismiss(toastIdLogin);
       toast.error(error.message || "User Fail to Login");
@@ -92,7 +97,7 @@ const LogInForm = () => {
         </Link>
       </p>
       <div className="divider mt-5">OR</div>
-      <GoogleLogin />
+      <GoogleLogin from={from} />
     </form>
   );
 };

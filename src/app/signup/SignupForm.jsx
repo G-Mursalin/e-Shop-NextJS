@@ -4,12 +4,12 @@ import GoogleLogin from "@/components/GoogleLogin";
 import useAuth from "@/hooks/useAuth";
 import generateJWT from "@/utils/generateJWT";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 
 const SignUpForm = () => {
   const { createUser, profileUpdate } = useAuth();
-
   const {
     register,
     handleSubmit,
@@ -17,6 +17,9 @@ const SignUpForm = () => {
     getValues,
     setValue,
   } = useForm();
+  const search = useSearchParams();
+  const from = search.get("redirectUrl") || "/";
+  const { replace } = useRouter();
 
   // Handle Image Upload
   const handleUploadImage = async (e) => {
@@ -53,11 +56,12 @@ const SignUpForm = () => {
       // Creating Users
       const user = await createUser(email, password);
       // Creating JWT
-      // generateJWT({ email });
+      await generateJWT({ email });
       // Updating User Information
       await profileUpdate({ displayName: name, photoURL: photo });
       toast.dismiss(toastIdSignUp);
       toast.success("User SignUp Successfully");
+      replace(from);
     } catch (error) {
       toast.dismiss(toastIdSignUp);
       toast.error(error.message || "User Fail to SignUp");
