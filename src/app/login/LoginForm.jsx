@@ -2,6 +2,7 @@
 
 import GoogleLogin from "@/components/GoogleLogin";
 import useAuth from "@/hooks/useAuth";
+import generateJWT from "@/utils/generateJWT";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
@@ -21,6 +22,8 @@ const LogInForm = () => {
 
     try {
       const user = await signIn(email, password);
+      // Create JWT
+      generateJWT({ email });
       toast.dismiss(toastIdLogin);
       toast.success("User Login Successfully");
     } catch (error) {

@@ -1,4 +1,5 @@
 import useAuth from "@/hooks/useAuth";
+import generateJWT from "@/utils/generateJWT";
 import { toast } from "react-hot-toast";
 import { FcGoogle } from "react-icons/fc";
 
@@ -8,7 +9,9 @@ const GoogleLogin = ({ from }) => {
   const handleGoogleLogin = async () => {
     const toastIdLogin = toast.loading("Loading...");
     try {
-      const user = await googleLogin();
+      const { user } = await googleLogin();
+      // Create JWT
+      // generateJWT({ email: user.email });
       toast.dismiss(toastIdLogin);
       toast.success("User Login Successfully");
     } catch (error) {

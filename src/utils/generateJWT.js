@@ -1,11 +1,11 @@
-const createJWT = async (payload) => {
+const generateJWT = async (userInfo) => {
   try {
     const res = await fetch("/api/auth", {
       method: "POST",
       headers: {
         "context-type": "application/json",
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(userInfo),
     });
     const data = await res.json();
     return data;
@@ -14,4 +14,4 @@ const createJWT = async (payload) => {
   }
 };
 
-export default createJWT;
+export default generateJWT;
