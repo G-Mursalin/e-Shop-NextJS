@@ -6,10 +6,11 @@ import Link from "next/link";
 import NavLink from "./NavLink";
 import { afterLoginNavData, beforeLoginNavData } from "@/data/navData";
 import useTheme from "@/hooks/useTheme";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import useAuth from "@/hooks/useAuth";
 import { toast } from "react-hot-toast";
 import { usePathname, useRouter } from "next/navigation";
+import useCart from "@/hooks/useCart";
 
 const Navbar = () => {
   const { user, logout } = useAuth();
@@ -19,6 +20,11 @@ const Navbar = () => {
   const { theme, toggleTheme } = useTheme();
   const { replace } = useRouter();
   const path = usePathname();
+  const { cart } = useCart();
+  const total = useMemo(
+    () => cart.reduce((pre, cur) => cur.price * cur.quantity + pre, 0),
+    [cart]
+  );
 
   // Handle User Logout
   const handleLogout = async () => {
@@ -87,7 +93,7 @@ const Navbar = () => {
                 />
               </svg>
               <span className="badge badge-sm indicator-item bg-primary text-white dark:text-gray-300">
-                22
+                {cart.length}
               </span>
             </div>
           </label>
@@ -96,8 +102,8 @@ const Navbar = () => {
             className="card dropdown-content card-compact mt-3 w-52 bg-base-100 shadow"
           >
             <div className="card-body">
-              <span className="text-lg font-bold"> 22 Items</span>
-              <span className="text-info">Total: 25</span>
+              <span className="text-lg font-bold">{cart.length} Items</span>
+              <span className="text-info">Total: {total}</span>
               <div className="card-actions">
                 <Link href="/checkout" className="block w-full">
                   <button className="btn-primary btn-block btn">
